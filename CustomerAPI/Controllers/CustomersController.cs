@@ -73,6 +73,14 @@ namespace CustomerAPI.Controllers
         }
 
         // POST: api/Customers
+        [Route("api/Customers/PostTest")]
+        [ResponseType(typeof(string))]
+        [HttpPost]
+        public IHttpActionResult PostTest([FromBody]string customer)
+        {
+            return Ok(customer);
+        }
+        [Route("api/Customers/PostCustomer")]
         [ResponseType(typeof(Customer))]
         public IHttpActionResult PostCustomer(Customer customer)
         {
@@ -83,10 +91,9 @@ namespace CustomerAPI.Controllers
 
             db.Customers.Add(customer);
             db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = customer.CustomerId }, customer);
+            return Ok(customer);
         }
-
+        
         // DELETE: api/Customers/5
         [ResponseType(typeof(Customer))]
         public IHttpActionResult DeleteCustomer(int id)
