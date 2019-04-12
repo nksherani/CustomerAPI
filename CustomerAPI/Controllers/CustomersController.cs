@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -88,7 +89,25 @@ namespace CustomerAPI.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            if(customer.CustomerId!=0)
+            {
+                var cust = db.Customers.Where(x => x.CustomerId == customer.CustomerId).FirstOrDefault();
+                if(cust != null)
+                {
+                    cust.CustomerName = customer.CustomerName;
+                    cust.Address = customer.Address;
+                    cust.Zip = customer.Zip;
+                    cust.City = customer.City;
+                    cust.Telephone = customer.Telephone;
+                    cust.ContactFirst = customer.ContactFirst;
+                    cust.ContactLast = customer.ContactLast;
+                    cust.UpdatedDate = DateTime.Now;
+                    db.Customers.AddOrUpdate(cust);
+                    db.SaveChanges();
+                    return Ok(cust);
+                }
+            }
+            customer.CreatedDate = DateTime.Now;
             db.Customers.Add(customer);
             db.SaveChanges();
             return Ok(customer);
